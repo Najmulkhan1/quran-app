@@ -1,0 +1,116 @@
+================================================================================
+                  BANGLA TRANSLATION FEATURE - IMPLEMENTATION
+================================================================================
+
+COMPLETED FEATURES:
+✅ Added Bangla translation support to the Quran app
+✅ Created language toggle UI (English / Bangla / Both)
+✅ Implemented persistent language preference (localStorage)
+✅ Updated data types to support multiple translations
+✅ Merged English and Bangla translations seamlessly
+✅ Created sample Bangla translation data file
+
+================================================================================
+USER-FACING CHANGES:
+================================================================================
+
+1. LANGUAGE SELECTOR IN SETTINGS
+   - Location: Settings Panel (gear icon → top right)
+   - Three options: "English Only", "Bengali Only", "Both Languages"
+   - Default: Both Languages
+   - Auto-saves to browser storage
+
+2. TRANSLATION DISPLAY
+   Each Ayah now shows:
+   - ENGLISH section with English translation
+   - BENGALI section with Bengali translation (if selected)
+   - Or just one if user selected that option
+   - Clear labeled headers for easy identification
+
+================================================================================
+CODE CHANGES:
+================================================================================
+
+Modified Files:
+  ✓ src/lib/types.ts
+    - Added TranslationLanguage type
+    - Added optional 'bangla' field to Verse interface
+    - Updated FontSettings interface
+
+  ✓ src/hooks/useFontSettings.ts
+    - Added translationLanguage to state
+    - Added setTranslationLanguage function
+    - Persists to localStorage
+
+  ✓ src/components/ui/FontSettingsPanel.tsx
+    - Added language selection buttons with Globe icon
+    - Three-button toggle for translation mode
+
+  ✓ src/components/surah/AyahCard.tsx  
+    - Updated to show/hide Bangla based on settings
+    - Added labeled sections for each language
+    - Conditional rendering for translations
+
+  ✓ src/components/surah/SurahReader.tsx
+    - Passes translationLanguage prop to AyahCard
+
+  ✓ src/components/layout/MainLayout.tsx
+    - Passes language setting through props
+    - Wires up setTranslationLanguage handler
+
+  ✓ src/lib/quran.ts
+    - Imports both English and Bangla data
+    - Added mergeBanglTranslation helper
+    - Merges translations in getSurahById
+
+New Files:
+  ✓ src/data/quran_bn.json - Sample Bangla translations
+
+================================================================================
+GETTING COMPLETE BANGLA DATA:
+================================================================================
+
+The current quran_bn.json contains sample data for demonstration.
+To add complete Bangla translations:
+
+1. Find a complete Bangla Quran translation dataset
+2. Convert it to match the structure in quran_bn.json
+3. Replace the current file
+
+Required structure for each verse:
+{
+  "id": 1,
+  "text": "Arabic text",
+  "translation": "English translation",
+  "bangla": "Bengali translation"
+}
+
+================================================================================
+TESTING THE FEATURE:
+================================================================================
+
+1. Start the dev server: npm run dev
+2. Navigate to any Surah
+3. Click Settings icon (⚙️)
+4. Scroll down to "Translation Language"
+5. Try each option to see translations change:
+   - English Only: Shows only ENGLISH section
+   - Bengali Only: Shows only BENGALI section
+   - Both Languages: Shows both sections
+
+6. Refresh page - your selection is saved!
+
+================================================================================
+DATABASE/API CHANGES:
+================================================================================
+
+No database changes needed - all translations are in JSON files.
+API automatically merges translations when serving Ayahs.
+
+The getSurahById() function now:
+1. Loads English translation
+2. Loads Bangla translation
+3. Merges them together
+4. Returns combined data
+
+================================================================================
