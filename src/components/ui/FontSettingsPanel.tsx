@@ -1,6 +1,7 @@
 "use client";
-import { X, Type, AlignLeft, Globe } from "lucide-react";
+import { X, Type, AlignLeft, Globe, Sun, Moon, Monitor } from "lucide-react";
 import { ArabicFont, TranslationLanguage, BENGALI_TRANSLATORS } from "@/lib/types";
+import { useTheme } from "next-themes";
 
 interface FontSettingsPanelProps {
   isOpen: boolean;
@@ -44,6 +45,8 @@ export default function FontSettingsPanel({
   onTranslationLanguageChange,
   onSelectedBanglaTranslatorsChange,
 }: FontSettingsPanelProps) {
+  const { theme, setTheme } = useTheme();
+
   if (!isOpen) return null;
 
   const toggleTranslator = (id: string) => {
@@ -66,26 +69,59 @@ export default function FontSettingsPanel({
       />
 
       {/* Panel */}
-      <div className="fixed right-4 top-16 w-[320px] bg-[#161b22] border border-[#30363d] rounded-xl shadow-2xl z-50 animate-fade-in flex flex-col max-h-[85vh]">
+      <div className="fixed right-4 top-16 w-[320px] bg-card rounded-2xl shadow-2xl z-50 animate-fade-in flex flex-col max-h-[85vh]">
         {/* Header — always visible */}
-        <div className="flex items-center justify-between px-5 py-4 border-b border-[#30363d] flex-shrink-0">
-          <h3 className="text-sm font-semibold text-[#e6edf3] flex items-center gap-2">
-            <Type size={16} className="text-[#d4a843]" />
+        <div className="flex items-center justify-between px-5 py-4 flex-shrink-0">
+          <h3 className="text-sm font-semibold text-primary flex items-center gap-2">
+            <Type size={16} className="text-gold" />
             Settings & Tafsir
           </h3>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-[#636e7b] hover:text-[#e6edf3] hover:bg-[#21262d] transition-colors"
+            className="p-1.5 rounded-lg text-muted hover:text-primary hover:bg-tertiary transition-colors"
           >
             <X size={16} />
           </button>
         </div>
 
         {/* Scrollable content */}
-        <div className="p-5 space-y-6 overflow-y-auto scrollbar-thin scrollbar-thumb-[#30363d] scrollbar-track-transparent">
+        <div className="p-5 space-y-6 overflow-y-auto scrollbar-thin scrollbar-thumb-muted scrollbar-track-transparent">
+          
+          {/* Theme Selector */}
+          <div>
+            <label className="block text-xs font-semibold text-secondary uppercase tracking-wider mb-3 flex items-center gap-1.5">
+              <Sun size={12} />
+              Theme Appearance
+            </label>
+            <div className="flex bg-tertiary p-1 rounded-xl">
+              {[
+                { value: "light", label: "Light", icon: Sun },
+                { value: "dark", label: "Dark", icon: Moon },
+                { value: "system", label: "System", icon: Monitor },
+              ].map((t) => {
+                const Icon = t.icon;
+                const isActive = theme === t.value;
+                return (
+                  <button
+                    key={t.value}
+                    onClick={() => setTheme(t.value)}
+                    className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-semibold transition-all duration-200 ${
+                      isActive
+                        ? "bg-card text-gold shadow-sm"
+                        : "text-muted hover:text-primary"
+                    }`}
+                  >
+                    <Icon size={14} />
+                    {t.label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
           {/* Translation Language */}
           <div>
-            <label className="block text-xs font-semibold text-[#848d97] uppercase tracking-wider mb-3 flex items-center gap-1.5">
+            <label className="block text-xs font-semibold text-secondary uppercase tracking-wider mb-3 flex items-center gap-1.5">
               <Globe size={12} />
               Translation Language
             </label>
@@ -98,10 +134,10 @@ export default function FontSettingsPanel({
                 <button
                   key={option.value}
                   onClick={() => onTranslationLanguageChange(option.value)}
-                  className={`px-2 py-2 rounded-lg border transition-all text-[10px] font-bold ${
+                  className={`px-2 py-2 rounded-lg transition-all text-[10px] font-bold ${
                     translationLanguage === option.value
-                      ? "bg-[rgba(212,168,67,0.1)] border-[#d4a843] text-[#d4a843]"
-                      : "bg-[#21262d] border-[#30363d] text-[#848d97] hover:border-[#636e7b] hover:text-[#e6edf3]"
+                      ? "bg-gold/10 text-gold"
+                      : "bg-tertiary text-secondary hover:text-primary"
                   }`}
                 >
                   {option.label}
@@ -113,7 +149,7 @@ export default function FontSettingsPanel({
           {/* Bengali Translators (Multi-select like Tafsir) */}
           {(translationLanguage === "bangla" || translationLanguage === "both") && (
             <div>
-              <label className="block text-xs font-semibold text-[#848d97] uppercase tracking-wider mb-3 flex items-center gap-1.5">
+              <label className="block text-xs font-semibold text-secondary uppercase tracking-wider mb-3 flex items-center gap-1.5">
                 <AlignLeft size={12} />
                 Bengali Translators (Tafsir)
               </label>
@@ -122,19 +158,19 @@ export default function FontSettingsPanel({
                   <button
                     key={translator.id}
                     onClick={() => toggleTranslator(translator.id)}
-                    className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg border transition-all text-left ${
+                    className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all text-left ${
                       selectedBanglaTranslators.includes(translator.id)
-                        ? "bg-[rgba(212,168,67,0.08)] border-[rgba(212,168,67,0.4)] text-[#d4a843]"
-                        : "bg-[#21262d] border-[#30363d] text-[#848d97] hover:border-[#636e7b]"
+                        ? "bg-gold/10 text-gold"
+                        : "bg-tertiary text-secondary"
                     }`}
                   >
                     <div className={`w-3.5 h-3.5 rounded-sm border flex items-center justify-center flex-shrink-0 ${
                       selectedBanglaTranslators.includes(translator.id)
-                        ? "bg-[#d4a843] border-[#d4a843]"
+                        ? "bg-gold border-gold"
                         : "border-[#484f58]"
                     }`}>
                       {selectedBanglaTranslators.includes(translator.id) && (
-                        <div className="w-1.5 h-1.5 bg-[#0d1117] rounded-full" />
+                        <div className="w-1.5 h-1.5 bg-app rounded-full" />
                       )}
                     </div>
                     <span className="text-[11px] font-medium leading-tight">{translator.name}</span>
@@ -146,7 +182,7 @@ export default function FontSettingsPanel({
 
           {/* Arabic Font Selection */}
           <div>
-            <label className="block text-xs font-semibold text-[#848d97] uppercase tracking-wider mb-3">
+            <label className="block text-xs font-semibold text-secondary uppercase tracking-wider mb-3">
               Arabic Font
             </label>
             <div className="space-y-2">
@@ -154,10 +190,10 @@ export default function FontSettingsPanel({
                 <button
                   key={font.value}
                   onClick={() => onArabicFontChange(font.value)}
-                  className={`w-full flex items-center justify-between px-4 py-3 rounded-lg border transition-all ${
+                  className={`w-full flex items-center justify-between px-4 py-3 rounded-lg transition-all ${
                     arabicFont === font.value
-                      ? "bg-[rgba(212,168,67,0.1)] border-[#d4a843] text-[#d4a843]"
-                      : "bg-[#21262d] border-[#30363d] text-[#848d97] hover:border-[#636e7b] hover:text-[#e6edf3]"
+                      ? "bg-gold/10 text-gold"
+                      : "bg-tertiary text-secondary hover:text-primary"
                   }`}
                 >
                   <span className="text-xs font-medium">{font.label}</span>
@@ -177,11 +213,11 @@ export default function FontSettingsPanel({
           {/* Arabic Font Size */}
           <div>
             <div className="flex items-center justify-between mb-3">
-              <label className="text-xs font-semibold text-[#848d97] uppercase tracking-wider flex items-center gap-1.5">
+              <label className="text-xs font-semibold text-secondary uppercase tracking-wider flex items-center gap-1.5">
                 <Type size={12} />
                 Arabic Size
               </label>
-              <span className="text-xs font-mono text-[#d4a843] bg-[#21262d] px-2 py-0.5 rounded">
+              <span className="text-xs font-mono text-gold bg-tertiary px-2 py-0.5 rounded">
                 {arabicSize}px
               </span>
             </div>
@@ -192,11 +228,11 @@ export default function FontSettingsPanel({
               step={2}
               value={arabicSize}
               onChange={(e) => onArabicSizeChange(Number(e.target.value))}
-              className="w-full h-1.5 bg-[#21262d] rounded-lg appearance-none cursor-pointer accent-[#d4a843]"
+              className="w-full h-1.5 bg-tertiary rounded-lg appearance-none cursor-pointer accent-[#d4a843]"
             />
             {/* Preview */}
             <div
-              className="mt-3 p-4 bg-[#0d1117] rounded-lg text-right text-[#e6edf3] border border-[#21262d] overflow-hidden"
+              className="mt-3 p-4 bg-app rounded-lg text-right text-primary overflow-hidden"
               style={{
                 fontSize: `${arabicSize}px`,
                 fontFamily: FONTS.find(f => f.value === arabicFont)?.css || "'Amiri', serif",
@@ -215,11 +251,11 @@ export default function FontSettingsPanel({
           {/* Translation Font Size */}
           <div>
             <div className="flex items-center justify-between mb-3">
-              <label className="text-xs font-semibold text-[#848d97] uppercase tracking-wider flex items-center gap-1.5">
+              <label className="text-xs font-semibold text-secondary uppercase tracking-wider flex items-center gap-1.5">
                 <AlignLeft size={12} />
                 Translation Size
               </label>
-              <span className="text-xs font-mono text-[#d4a843] bg-[#21262d] px-2 py-0.5 rounded">
+              <span className="text-xs font-mono text-gold bg-tertiary px-2 py-0.5 rounded">
                 {translationSize}px
               </span>
             </div>
@@ -230,11 +266,11 @@ export default function FontSettingsPanel({
               step={1}
               value={translationSize}
               onChange={(e) => onTranslationSizeChange(Number(e.target.value))}
-              className="w-full h-1.5 bg-[#21262d] rounded-lg appearance-none cursor-pointer accent-[#d4a843]"
+              className="w-full h-1.5 bg-tertiary rounded-lg appearance-none cursor-pointer accent-[#d4a843]"
             />
             {/* Preview */}
             <div
-              className="mt-3 p-3 bg-[#0d1117] rounded-lg text-[#848d97] border border-[#21262d]"
+              className="mt-3 p-3 bg-app rounded-lg text-secondary"
               style={{ 
                 fontSize: `${translationSize}px`, 
                 lineHeight: 1.6,

@@ -63,7 +63,7 @@ export default function MainLayout({ children, surahs, activeSurahId }: MainLayo
     : "ml-[60px]";
 
   return (
-    <div className="min-h-screen bg-[#0d1117]">
+    <div className="min-h-screen bg-app">
       {/* Desktop Icon Sidebar */}
       {!isMobile && (
         <IconSidebar
@@ -88,13 +88,13 @@ export default function MainLayout({ children, surahs, activeSurahId }: MainLayo
         className={`transition-all duration-300 ${contentMargin} min-h-screen pb-24`}
       >
         {/* Top Header Bar */}
-        <header className="sticky top-0 z-20 bg-[#0d1117]/90 backdrop-blur-md border-b border-[#21262d] px-4 h-[56px] flex items-center justify-between">
+        <header className="sticky top-0 z-20 bg-app/90 backdrop-blur-md border-b border-active px-4 h-[56px] flex items-center justify-between">
           <div className="flex items-center gap-3">
             {/* Mobile hamburger */}
             {isMobile && (
               <button
                 onClick={() => setMobileDrawerOpen(true)}
-                className="p-2 rounded-lg text-[#636e7b] hover:text-[#e6edf3] hover:bg-[#21262d] transition-colors"
+                className="p-2 rounded-lg text-muted hover:text-primary hover:bg-tertiary transition-colors"
               >
                 <Menu size={20} />
               </button>
@@ -104,14 +104,14 @@ export default function MainLayout({ children, surahs, activeSurahId }: MainLayo
             {!isMobile && (
               <button
                 onClick={() => setSurahSidebarOpen((p) => !p)}
-                className="p-2 rounded-lg text-[#636e7b] hover:text-[#e6edf3] hover:bg-[#21262d] transition-colors"
+                className="p-2 rounded-lg text-muted hover:text-primary hover:bg-tertiary transition-colors"
                 title="Toggle sidebar"
               >
                 {surahSidebarOpen ? <ChevronLeft size={18} /> : <ChevronRight size={18} />}
               </button>
             )}
 
-            <span className="text-sm text-[#636e7b] hidden sm:block">
+            <span className="text-sm text-muted hidden sm:block">
               القرآن الكريم
             </span>
           </div>
@@ -121,11 +121,11 @@ export default function MainLayout({ children, surahs, activeSurahId }: MainLayo
             {/* Search trigger */}
             <button
               onClick={() => setSearchOpen(true)}
-              className="flex items-center gap-2 px-3 py-1.5 bg-[#161b22] border border-[#30363d] rounded-lg text-xs text-[#636e7b] hover:text-[#e6edf3] hover:border-[#636e7b] transition-colors"
+              className="flex items-center gap-2 px-3 py-1.5 bg-card border border-default rounded-lg text-xs text-muted hover:text-primary hover:border-[#636e7b] transition-colors"
             >
               <Search size={13} />
               <span className="hidden sm:inline">Search</span>
-              <kbd className="hidden sm:inline bg-[#21262d] px-1.5 py-0.5 rounded text-[10px]">
+              <kbd className="hidden sm:inline bg-tertiary px-1.5 py-0.5 rounded text-[10px]">
                 ⌘K
               </kbd>
             </button>
@@ -133,7 +133,7 @@ export default function MainLayout({ children, surahs, activeSurahId }: MainLayo
             {/* Settings */}
             <button
               onClick={() => setSettingsOpen(true)}
-              className="p-2 rounded-lg text-[#636e7b] hover:text-[#e6edf3] hover:bg-[#21262d] transition-colors"
+              className="p-2 rounded-lg text-muted hover:text-primary hover:bg-tertiary transition-colors"
               title="Font Settings"
             >
               <Settings size={18} />

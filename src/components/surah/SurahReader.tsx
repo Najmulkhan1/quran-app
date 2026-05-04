@@ -126,6 +126,8 @@ export default function SurahReader({ surah }: SurahReaderProps) {
               <AyahCard
                 verse={verse}
                 surahId={surah.id}
+                surahName={surah.transliteration}
+                surahTranslation={surah.translation}
                 arabicFont={settings.arabicFont}
                 arabicSize={settings.arabicSize}
                 translationSize={settings.translationSize}
@@ -153,11 +155,11 @@ export default function SurahReader({ surah }: SurahReaderProps) {
       </div>
 
       {/* Navigation footer */}
-      <div className="flex items-center justify-between mt-8 pt-6 border-t border-[#21262d]">
+      <div className="flex items-center justify-between mt-8 pt-6 border-t border-active">
         {surah.id > 1 ? (
           <a
             href={`/surah/${surah.id - 1}`}
-            className="flex items-center gap-2 px-4 py-2.5 bg-[#161b22] border border-[#30363d] rounded-xl text-sm text-[#848d97] hover:text-[#e6edf3] hover:border-[#636e7b] transition-all"
+            className="flex items-center gap-2 px-4 py-2.5 bg-card border border-default rounded-xl text-sm text-secondary hover:text-primary hover:border-[#636e7b] transition-all"
           >
             ← Previous Surah
           </a>
@@ -165,14 +167,14 @@ export default function SurahReader({ surah }: SurahReaderProps) {
           <div />
         )}
 
-        <span className="text-xs text-[#636e7b]">
+        <span className="text-xs text-muted">
           Surah {surah.id} of 114
         </span>
 
         {surah.id < 114 ? (
           <a
             href={`/surah/${surah.id + 1}`}
-            className="flex items-center gap-2 px-4 py-2.5 bg-[#161b22] border border-[#30363d] rounded-xl text-sm text-[#848d97] hover:text-[#e6edf3] hover:border-[#636e7b] transition-all"
+            className="flex items-center gap-2 px-4 py-2.5 bg-card border border-default rounded-xl text-sm text-secondary hover:text-primary hover:border-[#636e7b] transition-all"
           >
             Next Surah →
           </a>

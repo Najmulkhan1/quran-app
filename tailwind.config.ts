@@ -10,25 +10,20 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        dark: {
-          900: "#0d1117",
-          800: "#161b22",
-          700: "#21262d",
-          600: "#30363d",
-          500: "#3d444d",
-          400: "#636e7b",
-          300: "#848d97",
-          200: "#adbac7",
-          100: "#cdd9e5",
-        },
+        app: "var(--bg-app)",
+        card: "var(--bg-card)",
+        tertiary: "var(--bg-tertiary)",
+        hover: "var(--bg-hover)",
+        default: "var(--border-default)",
+        active: "var(--border-active)",
+        primary: "var(--text-primary)",
+        secondary: "var(--text-secondary)",
+        muted: "var(--text-muted)",
+        "app-reverse": "var(--text-app)",
         gold: {
-          400: "#d4a843",
-          500: "#b8922e",
-          600: "#9c7a1f",
-        },
-        emerald: {
-          400: "#4ade80",
-          500: "#22c55e",
+          DEFAULT: "var(--gold)",
+          dim: "var(--gold-dim)",
+          bg: "var(--gold-bg)",
         },
       },
       fontFamily: {

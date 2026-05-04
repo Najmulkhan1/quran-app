@@ -40,11 +40,11 @@ export default function AudioPlayerBar() {
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 px-4 pb-6 animate-slide-up">
-      <div className="max-w-4xl mx-auto bg-[#161b22]/95 backdrop-blur-md border border-[#30363d] rounded-2xl shadow-2xl overflow-hidden">
+      <div className="max-w-4xl mx-auto bg-card/95 backdrop-blur-md rounded-2xl shadow-2xl overflow-hidden">
         {/* Progress Bar */}
-        <div className="relative w-full h-1 bg-[#21262d] cursor-pointer group">
+        <div className="relative w-full h-1 bg-tertiary cursor-pointer group">
           <div 
-            className="absolute top-0 left-0 h-full bg-[#d4a843] transition-all duration-100"
+            className="absolute top-0 left-0 h-full bg-gold transition-all duration-100"
             style={{ width: `${progress}%` }}
           />
           <input
@@ -60,14 +60,14 @@ export default function AudioPlayerBar() {
         <div className="px-4 py-3 flex items-center justify-between gap-4">
           {/* Info */}
           <div className="flex items-center gap-3 min-w-0 flex-1">
-            <div className="w-10 h-10 rounded-lg bg-[#21262d] border border-[#30363d] flex items-center justify-center flex-shrink-0 text-[#d4a843] font-bold">
+            <div className="w-10 h-10 rounded-lg bg-tertiary flex items-center justify-center flex-shrink-0 text-gold font-bold">
               {metadata.surahId}
             </div>
             <div className="min-w-0">
-              <h4 className="text-sm font-bold text-[#e6edf3] truncate">
+              <h4 className="text-sm font-bold text-primary truncate">
                 {metadata.surahName} {metadata.ayahNumber && ` - Ayah ${metadata.ayahNumber}`}
               </h4>
-              <p className="text-[11px] text-[#848d97] truncate">
+              <p className="text-[11px] text-secondary truncate">
                 {metadata.reciterName}
               </p>
             </div>
@@ -78,7 +78,7 @@ export default function AudioPlayerBar() {
             <div className="flex items-center gap-1 sm:gap-4">
               <button 
                 onClick={() => skip(-10)}
-                className="p-2 text-[#848d97] hover:text-[#e6edf3] transition-colors"
+                className="p-2 text-secondary hover:text-primary transition-colors"
                 title="Back 10s"
               >
                 <RotateCcw size={18} />
@@ -87,7 +87,7 @@ export default function AudioPlayerBar() {
               <button 
                 onClick={togglePlayPause}
                 disabled={loading}
-                className="w-10 h-10 rounded-full bg-[#d4a843] text-[#0d1117] flex items-center justify-center hover:scale-105 active:scale-95 transition-all shadow-lg disabled:opacity-50"
+                className="w-10 h-10 rounded-full bg-gold text-[#0d1117] flex items-center justify-center hover:scale-105 active:scale-95 transition-all shadow-lg disabled:opacity-50"
               >
                 {loading ? (
                   <div className="w-5 h-5 border-2 border-[#0d1117] border-t-transparent rounded-full animate-spin" />
@@ -100,14 +100,14 @@ export default function AudioPlayerBar() {
 
               <button 
                 onClick={() => skip(10)}
-                className="p-2 text-[#848d97] hover:text-[#e6edf3] transition-colors"
+                className="p-2 text-secondary hover:text-primary transition-colors"
                 title="Forward 10s"
               >
                 <RotateCw size={18} />
               </button>
             </div>
 
-            <div className="hidden sm:flex items-center gap-2 text-[11px] font-mono text-[#636e7b] min-w-[80px]">
+            <div className="hidden sm:flex items-center gap-2 text-[11px] font-mono text-muted min-w-[80px]">
               <span>{formatTime(currentTimeMs)}</span>
               <span>/</span>
               <span>{formatTime(duration)}</span>
@@ -116,12 +116,12 @@ export default function AudioPlayerBar() {
 
           {/* Extra Actions */}
           <div className="flex items-center gap-2">
-            <button className="hidden sm:p-2 text-[#636e7b] hover:text-[#e6edf3] transition-colors">
+            <button className="hidden sm:p-2 text-muted hover:text-primary transition-colors">
               <Volume2 size={18} />
             </button>
             <button 
               onClick={stop}
-              className="p-2 text-[#636e7b] hover:text-red-400 transition-colors"
+              className="p-2 text-muted hover:text-red-400 transition-colors"
               title="Close Player"
             >
               <X size={18} />

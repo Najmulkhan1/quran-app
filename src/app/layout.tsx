@@ -10,6 +10,8 @@ export const metadata: Metadata = {
 
 import { FontSettingsProvider } from "@/context/FontSettingsContext";
 import { AudioProvider } from "@/context/AudioContext";
+import { BookmarkProvider } from "@/context/BookmarkContext";
+import { ThemeProvider } from "@/context/ThemeProvider";
 
 export default function RootLayout({
   children,
@@ -17,7 +19,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
@@ -30,12 +32,21 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="bg-[#0d1117] text-[#e6edf3] antialiased">
-        <FontSettingsProvider>
-          <AudioProvider>
-            {children}
-          </AudioProvider>
-        </FontSettingsProvider>
+      <body className="bg-app text-primary antialiased transition-colors duration-300">
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <FontSettingsProvider>
+            <AudioProvider>
+              <BookmarkProvider>
+                {children}
+              </BookmarkProvider>
+            </AudioProvider>
+          </FontSettingsProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
