@@ -17,9 +17,14 @@ export default function AudioPlayerBar() {
   } = useAudioPlayer();
 
   const [isMounted, setIsMounted] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
   }, []);
 
   if (!isMounted || !metadata) return null;
@@ -39,12 +44,12 @@ export default function AudioPlayerBar() {
   };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 px-4 pb-6 animate-slide-up">
+    <div className={`fixed left-0 right-0 z-50 px-4 pb-4 sm:pb-6 animate-slide-up transition-all duration-300 ${isMobile ? "bottom-[64px]" : "bottom-0"}`}>
       <div className="max-w-4xl mx-auto bg-card/95 backdrop-blur-md rounded-2xl shadow-2xl overflow-hidden">
         {/* Progress Bar */}
         <div className="relative w-full h-1 bg-tertiary cursor-pointer group">
           <div 
-            className="absolute top-0 left-0 h-full bg-gold transition-all duration-100"
+            className="absolute top-0 left-0 h-full bg-green transition-all duration-100"
             style={{ width: `${progress}%` }}
           />
           <input
@@ -60,7 +65,7 @@ export default function AudioPlayerBar() {
         <div className="px-4 py-3 flex items-center justify-between gap-4">
           {/* Info */}
           <div className="flex items-center gap-3 min-w-0 flex-1">
-            <div className="w-10 h-10 rounded-lg bg-tertiary flex items-center justify-center flex-shrink-0 text-gold font-bold">
+            <div className="w-10 h-10 rounded-lg bg-tertiary flex items-center justify-center flex-shrink-0 text-green font-bold">
               {metadata.surahId}
             </div>
             <div className="min-w-0">
@@ -87,10 +92,10 @@ export default function AudioPlayerBar() {
               <button 
                 onClick={togglePlayPause}
                 disabled={loading}
-                className="w-10 h-10 rounded-full bg-gold text-[#0d1117] flex items-center justify-center hover:scale-105 active:scale-95 transition-all shadow-lg disabled:opacity-50"
+                className="w-10 h-10 rounded-full bg-green text-white flex items-center justify-center hover:scale-105 active:scale-95 transition-all shadow-lg disabled:opacity-50"
               >
                 {loading ? (
-                  <div className="w-5 h-5 border-2 border-[#0d1117] border-t-transparent rounded-full animate-spin" />
+                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
                 ) : isPlaying ? (
                   <Pause size={20} fill="currentColor" />
                 ) : (

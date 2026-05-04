@@ -1,5 +1,6 @@
 "use client";
-import { X, Type, AlignLeft, Globe, Sun, Moon, Monitor } from "lucide-react";
+import { useState, useEffect } from "react";
+import { X, Type, AlignLeft, Globe, Sun, Moon, Monitor, Settings } from "lucide-react";
 import { ArabicFont, TranslationLanguage, BENGALI_TRANSLATORS } from "@/lib/types";
 import { useTheme } from "next-themes";
 
@@ -16,6 +17,9 @@ interface FontSettingsPanelProps {
   onTranslationSizeChange: (n: number) => void;
   onTranslationLanguageChange: (lang: TranslationLanguage) => void;
   onSelectedBanglaTranslatorsChange: (translators: string[]) => void;
+  viewMode: "translation" | "reading";
+  onViewModeChange: (mode: "translation" | "reading") => void;
+  isSidebar?: boolean;
 }
 
 const FONTS: { value: ArabicFont; label: string; sample: string; css: string }[] = [
@@ -44,10 +48,18 @@ export default function FontSettingsPanel({
   onTranslationSizeChange,
   onTranslationLanguageChange,
   onSelectedBanglaTranslatorsChange,
+  viewMode,
+  onViewModeChange,
+  isSidebar = false,
 }: FontSettingsPanelProps) {
   const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
 
-  if (!isOpen) return null;
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!isOpen && !isSidebar) return null;
 
   const toggleTranslator = (id: string) => {
     if (selectedBanglaTranslators.includes(id)) {
@@ -63,25 +75,59 @@ export default function FontSettingsPanel({
   return (
     <>
       {/* Backdrop */}
-      <div
-        className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40"
-        onClick={onClose}
-      />
+      {!isSidebar && (
+        <div
+          className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40"
+          onClick={onClose}
+        />
+      )}
 
-      {/* Panel */}
-      <div className="fixed right-4 top-16 w-[320px] bg-card rounded-2xl shadow-2xl z-50 animate-fade-in flex flex-col max-h-[85vh]">
+      {/* Panel / Sidebar */}
+      <div className={`flex flex-col h-full bg-card ${
+        isSidebar 
+          ? "w-full" 
+          : "fixed right-4 top-16 w-[320px] rounded-2xl shadow-2xl z-50 animate-fade-in max-h-[85vh]"
+      }`}>
+        {/* Top Toggle (Translation / Reading) */}
+        <div className="p-4 border-b border-white/5">
+          <div className="flex bg-app p-1 rounded-xl">
+            <button 
+              onClick={() => onViewModeChange("translation")}
+              className={`flex-1 py-1.5 text-xs font-bold rounded-lg shadow-sm transition-all ${
+                viewMode === "translation" 
+                  ? "bg-tertiary text-white" 
+                  : "text-muted hover:text-white"
+              }`}
+            >
+              Translation
+            </button>
+            <button 
+              onClick={() => onViewModeChange("reading")}
+              className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-all ${
+                viewMode === "reading" 
+                  ? "bg-tertiary text-white" 
+                  : "text-muted hover:text-white"
+              }`}
+            >
+              Reading
+            </button>
+          </div>
+        </div>
+
         {/* Header — always visible */}
         <div className="flex items-center justify-between px-5 py-4 flex-shrink-0">
-          <h3 className="text-sm font-semibold text-primary flex items-center gap-2">
-            <Type size={16} className="text-gold" />
-            Settings & Tafsir
+          <h3 className="text-xs font-bold text-white uppercase tracking-widest flex items-center gap-2">
+            <Settings size={14} className="text-green" />
+            Reading Settings
           </h3>
-          <button
-            onClick={onClose}
-            className="p-1.5 rounded-lg text-muted hover:text-primary hover:bg-tertiary transition-colors"
-          >
-            <X size={16} />
-          </button>
+          {!isSidebar && (
+            <button
+              onClick={onClose}
+              className="p-1.5 rounded-lg text-muted hover:text-white hover:bg-tertiary transition-colors"
+            >
+              <X size={16} />
+            </button>
+          )}
         </div>
 
         {/* Scrollable content */}
@@ -105,10 +151,10 @@ export default function FontSettingsPanel({
                   <button
                     key={t.value}
                     onClick={() => setTheme(t.value)}
-                    className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-semibold transition-all duration-200 ${
-                      isActive
-                        ? "bg-card text-gold shadow-sm"
-                        : "text-muted hover:text-primary"
+                    className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-bold transition-all duration-200 ${
+                      mounted && theme === t.value
+                        ? "bg-card text-green shadow-sm"
+                        : "text-muted hover:text-white"
                     }`}
                   >
                     <Icon size={14} />
@@ -136,8 +182,8 @@ export default function FontSettingsPanel({
                   onClick={() => onTranslationLanguageChange(option.value)}
                   className={`px-2 py-2 rounded-lg transition-all text-[10px] font-bold ${
                     translationLanguage === option.value
-                      ? "bg-gold/10 text-gold"
-                      : "bg-tertiary text-secondary hover:text-primary"
+                      ? "bg-green/10 text-green"
+                      : "bg-tertiary text-muted hover:text-white"
                   }`}
                 >
                   {option.label}
@@ -160,8 +206,8 @@ export default function FontSettingsPanel({
                     onClick={() => toggleTranslator(translator.id)}
                     className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all text-left ${
                       selectedBanglaTranslators.includes(translator.id)
-                        ? "bg-gold/10 text-gold"
-                        : "bg-tertiary text-secondary"
+                        ? "bg-green/10 text-green font-bold"
+                        : "bg-tertiary text-muted"
                     }`}
                   >
                     <div className={`w-3.5 h-3.5 rounded-sm border flex items-center justify-center flex-shrink-0 ${
@@ -192,8 +238,8 @@ export default function FontSettingsPanel({
                   onClick={() => onArabicFontChange(font.value)}
                   className={`w-full flex items-center justify-between px-4 py-3 rounded-lg transition-all ${
                     arabicFont === font.value
-                      ? "bg-gold/10 text-gold"
-                      : "bg-tertiary text-secondary hover:text-primary"
+                      ? "bg-green/10 text-green font-bold"
+                      : "bg-tertiary text-muted hover:text-white"
                   }`}
                 >
                   <span className="text-xs font-medium">{font.label}</span>
@@ -217,7 +263,7 @@ export default function FontSettingsPanel({
                 <Type size={12} />
                 Arabic Size
               </label>
-              <span className="text-xs font-mono text-gold bg-tertiary px-2 py-0.5 rounded">
+              <span className="text-xs font-mono text-green bg-green/10 px-2 py-0.5 rounded">
                 {arabicSize}px
               </span>
             </div>
@@ -228,7 +274,7 @@ export default function FontSettingsPanel({
               step={2}
               value={arabicSize}
               onChange={(e) => onArabicSizeChange(Number(e.target.value))}
-              className="w-full h-1.5 bg-tertiary rounded-lg appearance-none cursor-pointer accent-[#d4a843]"
+              className="w-full h-1.5 bg-tertiary rounded-lg appearance-none cursor-pointer accent-green"
             />
             {/* Preview */}
             <div
@@ -255,7 +301,7 @@ export default function FontSettingsPanel({
                 <AlignLeft size={12} />
                 Translation Size
               </label>
-              <span className="text-xs font-mono text-gold bg-tertiary px-2 py-0.5 rounded">
+              <span className="text-xs font-mono text-green bg-green/10 px-2 py-0.5 rounded">
                 {translationSize}px
               </span>
             </div>
@@ -266,7 +312,7 @@ export default function FontSettingsPanel({
               step={1}
               value={translationSize}
               onChange={(e) => onTranslationSizeChange(Number(e.target.value))}
-              className="w-full h-1.5 bg-tertiary rounded-lg appearance-none cursor-pointer accent-[#d4a843]"
+              className="w-full h-1.5 bg-tertiary rounded-lg appearance-none cursor-pointer accent-green"
             />
             {/* Preview */}
             <div

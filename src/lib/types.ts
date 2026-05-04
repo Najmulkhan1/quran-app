@@ -12,7 +12,7 @@ export interface Verse {
   text: string;
   translation: string;
   bangla?: string;
-  banglaTranslations?: { name: string; text: string }[];
+  banglaTranslations?: { id: string; name: string; text: string }[];
 }
 
 export interface SurahWithVerses extends Surah {
@@ -91,6 +91,7 @@ export interface FontSettings {
   translationSize: number;
   translationLanguage: TranslationLanguage;
   selectedBanglaTranslators: string[];
+  viewMode: "translation" | "reading";
 }
 
 export interface AudioMetadata {

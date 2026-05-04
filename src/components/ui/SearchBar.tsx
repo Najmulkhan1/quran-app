@@ -12,7 +12,7 @@ function highlight(text: string, query: string) {
     <>
       {parts.map((part, i) =>
         regex.test(part) ? (
-          <mark key={i} className="bg-[rgba(212,168,67,0.25)] text-gold rounded px-0.5">
+          <mark key={i} className="bg-green/20 text-green rounded px-0.5">
             {part}
           </mark>
         ) : (
@@ -91,12 +91,12 @@ export default function SearchBar({ isOpen, onClose }: SearchBarProps) {
   return (
     <>
       <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40" onClick={onClose} />
-      <div className="fixed top-[5vh] left-1/2 -translate-x-1/2 w-full max-w-2xl z-50 px-4 animate-fade-in">
+      <div className="fixed top-[2vh] sm:top-[5vh] inset-x-0 mx-auto w-[92%] sm:w-full max-w-2xl z-50 animate-fade-in">
         <div className="bg-card rounded-2xl shadow-2xl overflow-hidden">
           {/* Search input */}
           <div className="flex items-center gap-3 px-5 py-4 flex-shrink-0">
             {loading ? (
-              <Loader2 size={18} className="text-gold animate-spin flex-shrink-0" />
+              <Loader2 size={18} className="text-green animate-spin flex-shrink-0" />
             ) : (
               <Search size={18} className="text-muted flex-shrink-0" />
             )}
@@ -120,7 +120,7 @@ export default function SearchBar({ isOpen, onClose }: SearchBarProps) {
             <button
               onClick={() => doSearch(query)}
               disabled={query.length < 2}
-              className="px-4 py-1.5 bg-gold text-[#0d1117] rounded-lg text-xs font-semibold disabled:opacity-40 hover:bg-[#c49833] transition-colors"
+              className="px-4 py-1.5 bg-green text-white rounded-lg text-xs font-semibold disabled:opacity-40 hover:bg-green/80 transition-colors"
             >
               Search
             </button>
@@ -156,7 +156,7 @@ export default function SearchBar({ isOpen, onClose }: SearchBarProps) {
                         className="block px-5 py-4 hover:bg-tertiary transition-colors"
                       >
                         <div className="flex items-center gap-2 mb-2">
-                          <span className="text-xs font-semibold text-gold bg-[rgba(212,168,67,0.1)] px-2 py-0.5 rounded">
+                          <span className="text-xs font-bold text-green bg-green/10 px-2 py-0.5 rounded">
                             {r.surah_name} • {r.verse_number}
                           </span>
                           <span className="text-xs text-muted">{r.surah_translation}</span>

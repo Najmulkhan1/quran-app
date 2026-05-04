@@ -1,5 +1,5 @@
 "use client";
-import { MapPin, Hash, Play, Square } from "lucide-react";
+import { Play, Square } from "lucide-react";
 import { SurahWithVerses } from "@/lib/types";
 
 interface SurahHeaderProps {
@@ -14,61 +14,47 @@ export default function SurahHeader({
   isPlayingAll,
 }: SurahHeaderProps) {
   return (
-    <div className="relative overflow-hidden rounded-xl mb-6 bg-gradient-to-br from-[#fdfbf7] via-[#f5f0e1] to-[#ede4cc] dark:from-[#1a2234] dark:via-[#161b22] dark:to-[#0d1117]">
+    <div className="relative overflow-hidden rounded-2xl mb-8 bg-gradient-to-br from-[#fdfbf7] to-[#f5f0e1] dark:from-[#161b22] dark:to-[#0b0e14] shadow-xl dark:shadow-2xl ring-1 ring-black/5 dark:ring-white/5">
       {/* Decorative background pattern */}
-      <div className="absolute inset-0 opacity-[0.08] dark:opacity-5">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-gold rounded-full -translate-y-1/2 translate-x-1/2" />
-        <div className="absolute bottom-0 left-0 w-48 h-48 bg-gold rounded-full translate-y-1/2 -translate-x-1/2" />
+      <div className="absolute inset-0 opacity-10">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-green rounded-full -translate-y-1/2 translate-x-1/2 blur-[80px]" />
+        <div className="absolute bottom-0 left-0 w-48 h-48 bg-green rounded-full translate-y-1/2 -translate-x-1/2 blur-[60px]" />
       </div>
 
       <div className="relative px-6 py-8 text-center">
         {/* Arabic name */}
         <div
-          className="text-5xl text-gold mb-2 leading-relaxed"
+          className="text-3xl text-primary dark:text-white mb-2 leading-relaxed"
           style={{ fontFamily: "'Amiri', serif" }}
         >
           {surah.name}
         </div>
 
         {/* English name */}
-        <h1 className="text-xl font-semibold text-primary mb-1">
+        <h1 className="text-xl font-bold text-primary dark:text-white mb-1 tracking-tight">
           {surah.transliteration}
         </h1>
-        <p className="text-sm text-secondary mb-5">{surah.translation}</p>
-
-        {/* Meta badges */}
-        <div className="flex items-center justify-center gap-3 mb-5 flex-wrap">
-          <span className="flex items-center gap-1.5 text-xs text-secondary bg-tertiary px-3 py-1.5 rounded-full border border-default">
-            <Hash size={12} className="text-gold" />
-            Surah {surah.id}
-          </span>
-          <span className="flex items-center gap-1.5 text-xs text-secondary bg-tertiary px-3 py-1.5 rounded-full border border-default">
-            <MapPin size={12} className="text-gold" />
-            {surah.type === "meccan" ? "Makkah" : "Madinah"}
-          </span>
-          <span className="flex items-center gap-1.5 text-xs text-secondary bg-tertiary px-3 py-1.5 rounded-full border border-default">
-            <span className="text-gold">📖</span>
-            {surah.total_verses} Verses
-          </span>
-        </div>
+        <p className="text-[10px] text-muted mb-6 uppercase tracking-[0.2em] font-bold">
+          {surah.type === "meccan" ? "Makkah" : "Madinah"} • {surah.total_verses} Verses
+        </p>
 
         {/* Play All button */}
         <button
           onClick={onPlayAll}
-          className={`inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-medium transition-all ${
+          className={`inline-flex items-center gap-2 px-8 py-2 rounded-full text-xs font-bold transition-all transform hover:scale-105 active:scale-95 ${
             isPlayingAll
-              ? "bg-gold text-[#0d1117] shadow-lg shadow-[rgba(212,168,67,0.3)]"
-              : "bg-tertiary text-primary border border-default hover:bg-hover hover:border-gold"
+              ? "bg-green text-white shadow-xl shadow-green/30"
+              : "bg-app text-primary dark:bg-white dark:text-black hover:bg-green hover:text-white border border-black/5 dark:border-none"
           }`}
         >
           {isPlayingAll ? (
             <>
-              <Square size={14} fill="currentColor" />
+              <Square size={16} fill="currentColor" />
               Stop Recitation
             </>
           ) : (
             <>
-              <Play size={14} fill="currentColor" />
+              <Play size={16} fill="currentColor" />
               Play Full Surah
             </>
           )}
@@ -77,7 +63,7 @@ export default function SurahHeader({
         {/* Bismillah — shown for all surahs except 1 and 9 */}
         {surah.id !== 1 && surah.id !== 9 && (
           <div
-            className="mt-6 pt-5 border-t border-default text-3xl text-gold"
+            className="mt-6 pt-6 border-t border-black/5 dark:border-white/5 text-3xl text-green opacity-90 leading-normal"
             style={{ fontFamily: "'Amiri', serif", direction: "rtl" }}
           >
             بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ

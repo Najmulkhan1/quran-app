@@ -4,10 +4,11 @@ import { FontSettings, ArabicFont, TranslationLanguage } from "@/lib/types";
 
 const DEFAULT_SETTINGS: FontSettings = {
   arabicFont: "Amiri",
-  arabicSize: 28,
+  arabicSize: 24,
   translationSize: 16,
   translationLanguage: "both",
   selectedBanglaTranslators: ["taisirul"],
+  viewMode: "translation",
 };
 
 interface FontSettingsContextValue {
@@ -18,6 +19,7 @@ interface FontSettingsContextValue {
   setTranslationSize: (n: number) => void;
   setTranslationLanguage: (lang: TranslationLanguage) => void;
   setSelectedBanglaTranslators: (translators: string[]) => void;
+  setViewMode: (mode: "translation" | "reading") => void;
 }
 
 const FontSettingsContext = createContext<FontSettingsContextValue | null>(null);
@@ -39,6 +41,7 @@ export function FontSettingsProvider({ children }: { children: ReactNode }) {
           translationSize: parsed.translationSize ?? DEFAULT_SETTINGS.translationSize,
           translationLanguage: parsed.translationLanguage ?? DEFAULT_SETTINGS.translationLanguage,
           selectedBanglaTranslators: parsed.selectedBanglaTranslators ?? DEFAULT_SETTINGS.selectedBanglaTranslators,
+          viewMode: parsed.viewMode ?? DEFAULT_SETTINGS.viewMode,
         });
       }
     } catch {
@@ -61,10 +64,11 @@ export function FontSettingsProvider({ children }: { children: ReactNode }) {
   const setTranslationSize = useCallback((n: number) => updateSettings({ translationSize: Math.min(32, Math.max(12, n)) }), [updateSettings]);
   const setTranslationLanguage = useCallback((lang: TranslationLanguage) => updateSettings({ translationLanguage: lang }), [updateSettings]);
   const setSelectedBanglaTranslators = useCallback((translators: string[]) => updateSettings({ selectedBanglaTranslators: translators }), [updateSettings]);
+  const setViewMode = useCallback((mode: "translation" | "reading") => updateSettings({ viewMode: mode }), [updateSettings]);
 
   return (
     <FontSettingsContext.Provider
-      value={{ settings, mounted, setArabicFont, setArabicSize, setTranslationSize, setTranslationLanguage, setSelectedBanglaTranslators }}
+      value={{ settings, mounted, setArabicFont, setArabicSize, setTranslationSize, setTranslationLanguage, setSelectedBanglaTranslators, setViewMode }}
     >
       {children}
     </FontSettingsContext.Provider>

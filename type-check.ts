@@ -12,7 +12,9 @@ const settings: FontSettings = {
   arabicFont: "Amiri",
   arabicSize: 28,
   translationSize: 16,
-  translationLanguage: "both"
+  translationLanguage: "both",
+  selectedBanglaTranslators: ["taisirul"],
+  viewMode: "translation"
 };
 
 const lang: TranslationLanguage = "bangla";

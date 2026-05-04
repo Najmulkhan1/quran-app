@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -30,6 +30,11 @@ export default function IconSidebar({
   const pathname = usePathname();
   const { count: bookmarkCount } = useBookmarks();
   const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const icons = [
     {
@@ -52,7 +57,7 @@ export default function IconSidebar({
         <span className="relative">
           <BookMarked size={20} />
           {bookmarkCount > 0 && (
-            <span className="absolute -top-1.5 -right-1.5 min-w-[14px] h-[14px] bg-gold text-[#0d1117] text-[9px] font-bold rounded-full flex items-center justify-center px-0.5">
+            <span className="absolute -top-1.5 -right-1.5 min-w-[14px] h-[14px] bg-green text-white text-[9px] font-bold rounded-full flex items-center justify-center px-0.5 ring-1 ring-card">
               {bookmarkCount > 99 ? "99+" : bookmarkCount}
             </span>
           )}
@@ -78,8 +83,8 @@ export default function IconSidebar({
         href="/surah/1"
         className="w-full h-[60px] flex items-center justify-center hover:bg-tertiary/50 transition-colors"
       >
-        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#d4a843] via-[#b8860b] to-[#8b6d13] flex items-center justify-center shadow-md">
-          <Moon size={16} className="text-card" />
+        <div className="w-10 h-10 rounded-xl bg-green flex items-center justify-center shadow-lg shadow-green/20 ring-1 ring-white/10">
+          <BookMarked size={20} className="text-white" fill="currentColor" />
         </div>
       </Link>
 
@@ -103,8 +108,8 @@ export default function IconSidebar({
 
           const cls = `group relative w-11 h-11 rounded-xl flex items-center justify-center transition-all duration-300 cursor-pointer ${
             isActive
-              ? "text-card bg-gold shadow-[0_4px_12px_rgba(179,139,45,0.3)] scale-105"
-              : "text-muted hover:text-primary hover:bg-tertiary/80"
+              ? "text-white bg-green shadow-lg shadow-green/20 scale-105"
+              : "text-muted hover:text-white hover:bg-tertiary"
           }`;
 
           if (item.href) {
@@ -138,7 +143,7 @@ export default function IconSidebar({
           className="w-11 h-11 flex items-center justify-center rounded-xl text-muted hover:text-primary hover:bg-tertiary/80 transition-all duration-200"
           title="Toggle Theme"
         >
-          {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
+          {mounted ? (theme === "dark" ? <Sun size={18} /> : <Moon size={18} />) : <div className="w-[18px] h-[18px]" />}
         </button>
         <button
           onClick={onSurahListClick}

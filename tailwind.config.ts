@@ -20,6 +20,11 @@ const config: Config = {
         secondary: "var(--text-secondary)",
         muted: "var(--text-muted)",
         "app-reverse": "var(--text-app)",
+        green: {
+          DEFAULT: "var(--green)",
+          dim: "var(--green-dim)",
+          bg: "var(--green-bg)",
+        },
         gold: {
           DEFAULT: "var(--gold)",
           dim: "var(--gold-dim)",

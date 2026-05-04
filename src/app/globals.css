@@ -53,6 +53,10 @@
   --text-secondary: #7a6a58; /* Muted Desert Sand */
   --text-muted: #a89a8a;     /* Faded stone */
   
+  --green: #2e7d32;        /* Forest Green */
+  --green-dim: #1b5e20;
+  --green-bg: rgba(46, 125, 50, 0.1);
+  
   --gold: #b38b2d;        /* Deep Brass Gold */
   --gold-dim: #d4a843;    /* Radiant Gold */
   --gold-bg: rgba(179, 139, 45, 0.1); 
@@ -62,17 +66,19 @@
 }
 
 .dark {
-  /* Dark mode colors */
-  --bg-app: #0d1117;
-  --bg-card: #161b22;
-  --bg-tertiary: #21262d;
-  --bg-hover: #30363d;
+  /* Forest Dark Mode colors */
+  --bg-app: #0b0e14;      /* Deep obsidian background */
+  --bg-card: #12161c;     /* Midnight blue-black cards */
+  --bg-tertiary: #1a2029; /* Slightly lighter for hovers */
+  --bg-hover: #222b36;    /* Active state */
   --border-default: transparent;
-  --text-primary: #e6edf3;
-  --text-secondary: #848d97;
-  --text-muted: #636e7b;
-  --gold: #d4a843;
-  --gold-dim: #9c7a1f;
+  --text-primary: #f0f3f5;   /* Near white for text */
+  --text-secondary: #94a3b8; /* Muted slate */
+  --text-muted: #64748b;     /* Dim slate */
+  --green: #2e7d32;        /* Vibrant forest green */
+  --green-dim: #4ade80;    /* For subtle highlights */
+  --gold: #2e7d32;         /* Map gold to green for compatibility */
+  --gold-dim: #4ade80;
   --sidebar-width: 60px;
   --surah-sidebar-width: 280px;
 }
@@ -133,7 +139,7 @@ body {
   font-size: 2rem;
   direction: rtl;
   text-align: center;
-  color: var(--gold);
+  color: var(--green);
   padding: 1.5rem;
   display: block;
 }
@@ -146,8 +152,8 @@ body {
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  border: 1.5px solid var(--gold-dim);
-  color: var(--gold);
+  border: 1.5px solid var(--green);
+  color: var(--green);
   font-size: 0.75rem;
   font-weight: 600;
   flex-shrink: 0;
@@ -215,7 +221,7 @@ input[type='range']::-webkit-slider-thumb {
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  background: #d4a843;
+  background: var(--green);
   cursor: pointer;
   border: 3px solid #161b22;
   box-shadow: 0 0 10px rgba(0,0,0,0.3);
@@ -228,7 +234,7 @@ input[type='range']::-moz-range-thumb {
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  background: #d4a843;
+  background: var(--green);
   cursor: pointer;
   border: 3px solid #161b22;
   box-shadow: 0 0 10px rgba(0,0,0,0.3);
@@ -236,8 +242,8 @@ input[type='range']::-moz-range-thumb {
 
 /* Search highlight */
 mark {
-  background: rgba(212,168,67,0.25);
-  color: var(--gold);
+  background: rgba(46, 125, 50, 0.2);
+  color: var(--green);
   border-radius: 2px;
   padding: 0 2px;
 }

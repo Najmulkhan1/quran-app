@@ -1,12 +1,14 @@
 "use client";
 import { useState, useEffect } from "react";
-import { Menu, Search, Settings, ChevronLeft, ChevronRight } from "lucide-react";
+import Link from "next/link";
+import { Menu, Search, Settings, ChevronLeft, ChevronRight, Home, BookMarked } from "lucide-react";
 import IconSidebar from "./IconSidebar";
 import SurahSidebar from "./SurahSidebar";
 import FontSettingsPanel from "@/components/ui/FontSettingsPanel";
 import SearchBar from "@/components/ui/SearchBar";
 import AudioPlayerBar from "@/components/audio/AudioPlayerBar";
 import { useFontSettings } from "@/context/FontSettingsContext";
+import { useBookmarks } from "@/context/BookmarkContext";
 import { Surah } from "@/lib/types";
 
 interface MainLayoutProps {
@@ -21,6 +23,7 @@ export default function MainLayout({ children, surahs, activeSurahId }: MainLayo
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
+  const { count: bookmarkCount } = useBookmarks();
 
   const { 
     settings, 
@@ -28,7 +31,8 @@ export default function MainLayout({ children, surahs, activeSurahId }: MainLayo
     setArabicSize, 
     setTranslationSize, 
     setTranslationLanguage,
-    setSelectedBanglaTranslators 
+    setSelectedBanglaTranslators,
+    setViewMode
   } = useFontSettings();
 
   // Detect mobile
@@ -59,8 +63,8 @@ export default function MainLayout({ children, surahs, activeSurahId }: MainLayo
   const contentMargin = isMobile
     ? "ml-0"
     : surahSidebarOpen
-    ? "ml-[340px]"
-    : "ml-[60px]";
+    ? "ml-[340px] mr-[300px]"
+    : "ml-[60px] mr-[300px]";
 
   return (
     <div className="min-h-screen bg-app">
@@ -117,26 +121,30 @@ export default function MainLayout({ children, surahs, activeSurahId }: MainLayo
           </div>
 
           {/* Right actions */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 sm:gap-4">
             {/* Search trigger */}
             <button
               onClick={() => setSearchOpen(true)}
-              className="flex items-center gap-2 px-3 py-1.5 bg-card border border-default rounded-lg text-xs text-muted hover:text-primary hover:border-[#636e7b] transition-colors"
+              className="p-2 rounded-lg text-muted hover:text-primary hover:bg-tertiary transition-colors"
+              title="Search"
             >
-              <Search size={13} />
-              <span className="hidden sm:inline">Search</span>
-              <kbd className="hidden sm:inline bg-tertiary px-1.5 py-0.5 rounded text-[10px]">
-                ⌘K
-              </kbd>
+              <Search size={20} />
             </button>
 
-            {/* Settings */}
-            <button
-              onClick={() => setSettingsOpen(true)}
-              className="p-2 rounded-lg text-muted hover:text-primary hover:bg-tertiary transition-colors"
-              title="Font Settings"
-            >
-              <Settings size={18} />
+            {/* Mobile Settings Toggle */}
+            {isMobile && (
+              <button
+                onClick={() => setSettingsOpen(true)}
+                className="p-2 rounded-lg text-muted hover:text-primary hover:bg-tertiary transition-colors"
+                title="Settings"
+              >
+                <Settings size={20} />
+              </button>
+            )}
+
+            {/* Support Us Button */}
+            <button className="hidden md:flex items-center gap-2 px-4 py-1.5 bg-green text-white rounded-full text-xs font-bold shadow-lg shadow-green/20 hover:scale-105 transition-all">
+              Support Us <span className="text-[10px]">🤍</span>
             </button>
           </div>
         </header>
@@ -170,24 +178,94 @@ export default function MainLayout({ children, surahs, activeSurahId }: MainLayo
         </div>
       </main>
 
-      {/* Modals */}
       <SearchBar isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
-      <FontSettingsPanel
-        isOpen={settingsOpen}
-        onClose={() => setSettingsOpen(false)}
-        arabicFont={settings.arabicFont}
-        arabicSize={settings.arabicSize}
-        translationSize={settings.translationSize}
-        translationLanguage={settings.translationLanguage}
-        selectedBanglaTranslators={settings.selectedBanglaTranslators}
-        onArabicFontChange={setArabicFont}
-        onArabicSizeChange={setArabicSize}
-        onTranslationSizeChange={setTranslationSize}
-        onTranslationLanguageChange={setTranslationLanguage}
-        onSelectedBanglaTranslatorsChange={setSelectedBanglaTranslators}
-      />
+      
+      {/* Right Sidebar for Desktop */}
+      {!isMobile && (
+        <aside className="fixed right-0 top-0 h-screen w-[300px] bg-card border-l border-white/5 z-20 flex flex-col shadow-2xl">
+          <FontSettingsPanel
+            isOpen={true}
+            onClose={() => {}}
+            isSidebar={true}
+            arabicFont={settings.arabicFont}
+            arabicSize={settings.arabicSize}
+            translationSize={settings.translationSize}
+            translationLanguage={settings.translationLanguage}
+            selectedBanglaTranslators={settings.selectedBanglaTranslators}
+            onArabicFontChange={setArabicFont}
+            onArabicSizeChange={setArabicSize}
+            onTranslationSizeChange={setTranslationSize}
+            onTranslationLanguageChange={setTranslationLanguage}
+            onSelectedBanglaTranslatorsChange={setSelectedBanglaTranslators}
+            viewMode={settings.viewMode}
+            onViewModeChange={setViewMode}
+          />
+        </aside>
+      )}
+
+      {/* Mobile Settings Modal */}
+      {isMobile && (
+        <FontSettingsPanel
+          isOpen={settingsOpen}
+          onClose={() => setSettingsOpen(false)}
+          arabicFont={settings.arabicFont}
+          arabicSize={settings.arabicSize}
+          translationSize={settings.translationSize}
+          translationLanguage={settings.translationLanguage}
+          selectedBanglaTranslators={settings.selectedBanglaTranslators}
+          onArabicFontChange={setArabicFont}
+          onArabicSizeChange={setArabicSize}
+          onTranslationSizeChange={setTranslationSize}
+          onTranslationLanguageChange={setTranslationLanguage}
+          onSelectedBanglaTranslatorsChange={setSelectedBanglaTranslators}
+          viewMode={settings.viewMode}
+          onViewModeChange={setViewMode}
+        />
+      )}
 
       <AudioPlayerBar />
+
+      {/* Mobile Bottom Navigation Bar */}
+      {isMobile && (
+        <nav className="fixed bottom-0 left-0 right-0 bg-card/80 backdrop-blur-lg border-t border-white/5 px-6 py-3 z-30 flex items-center justify-between safe-area-inset-bottom">
+          <button
+            onClick={() => setMobileDrawerOpen(true)}
+            className="flex flex-col items-center gap-1 text-muted hover:text-green transition-colors"
+          >
+            <Home size={20} />
+            <span className="text-[10px] font-bold">Surahs</span>
+          </button>
+          
+          <button
+            onClick={() => setSearchOpen(true)}
+            className="flex flex-col items-center gap-1 text-muted hover:text-green transition-colors"
+          >
+            <Search size={20} />
+            <span className="text-[10px] font-bold">Search</span>
+          </button>
+
+          <Link
+            href="/bookmarks"
+            className="flex flex-col items-center gap-1 text-muted hover:text-green transition-colors relative"
+          >
+            <BookMarked size={20} />
+            {bookmarkCount > 0 && (
+              <span className="absolute -top-1 -right-1 min-w-[14px] h-[14px] bg-green text-white text-[8px] font-bold rounded-full flex items-center justify-center px-0.5 ring-1 ring-card">
+                {bookmarkCount}
+              </span>
+            )}
+            <span className="text-[10px] font-bold">Bookmarks</span>
+          </Link>
+
+          <button
+            onClick={() => setSettingsOpen(true)}
+            className="flex flex-col items-center gap-1 text-muted hover:text-green transition-colors"
+          >
+            <Settings size={20} />
+            <span className="text-[10px] font-bold">Settings</span>
+          </button>
+        </nav>
+      )}
     </div>
   );
 }

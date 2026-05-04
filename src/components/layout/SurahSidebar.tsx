@@ -59,14 +59,14 @@ export default function SurahSidebar({
         <div className="relative group">
           <Search
             size={14}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-muted group-focus-within:text-gold transition-colors"
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-muted group-focus-within:text-green transition-colors"
           />
           <input
             type="text"
             placeholder="Search surah..."
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
-            className="w-full bg-app border border-default rounded-full pl-9 pr-8 py-2 text-xs text-primary placeholder-[#636e7b] focus:outline-none focus:border-gold focus:ring-1 focus:ring-[#d4a843]/30 transition-all shadow-inner"
+            className="w-full bg-app border border-default rounded-full pl-9 pr-8 py-2 text-xs text-primary placeholder-[#636e7b] focus:outline-none focus:border-green focus:ring-1 focus:ring-green/30 transition-all shadow-inner"
           />
           {filter && (
             <button
@@ -95,17 +95,17 @@ export default function SurahSidebar({
                     href={`/surah/${surah.id}`}
                     ref={isActive ? activeRef : undefined}
                     onClick={isMobile ? onClose : undefined}
-                    className={`surah-item flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 cursor-pointer ${
+                    className={`surah-item flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-300 cursor-pointer ${
                       isActive
-                        ? "bg-gold/10 text-gold shadow-[inset_2px_0_0_0_#d4a843]"
+                        ? "bg-green/10 text-green"
                         : "hover:bg-tertiary/80 text-primary"
                     }`}
                   >
                     {/* Number */}
                     <div
-                      className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 ${
+                      className={`w-9 h-9 rounded-xl flex items-center justify-center text-xs font-bold flex-shrink-0 transition-colors ${
                         isActive
-                          ? "bg-gold text-[#0d1117]"
+                          ? "bg-green text-white"
                           : "bg-tertiary text-secondary"
                       }`}
                     >
@@ -116,8 +116,8 @@ export default function SurahSidebar({
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between">
                         <span
-                          className={`text-sm font-semibold truncate ${
-                            isActive ? "text-gold" : "text-primary group-hover:text-white transition-colors"
+                          className={`text-sm font-bold truncate ${
+                            isActive ? "text-green" : "text-primary"
                           }`}
                         >
                           {surah.transliteration}
@@ -134,10 +134,10 @@ export default function SurahSidebar({
                           {surah.translation}
                         </span>
                         <span
-                          className={`text-xs flex-shrink-0 ml-1 px-2 py-0.5 rounded-full font-medium ${
+                          className={`text-[10px] flex-shrink-0 ml-1 px-2 py-0.5 rounded-full font-bold uppercase tracking-tighter ${
                             surah.type === "meccan"
                               ? "bg-tertiary text-secondary"
-                              : "bg-gold/15 text-gold"
+                              : "bg-green/20 text-green"
                           }`}
                         >
                           {surah.total_verses}v

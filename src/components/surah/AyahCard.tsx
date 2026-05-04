@@ -19,6 +19,8 @@ interface AyahCardProps {
   verseWords?: VerseWords;
   currentTimeMs?: number;
   onPlay: () => void;
+  selectedBanglaTranslators: string[];
+  viewMode: "translation" | "reading";
 }
 
 export default function AyahCard({
@@ -30,14 +32,15 @@ export default function AyahCard({
   arabicSize,
   translationSize,
   translationLanguage,
-  selectedBanglaTranslators = ["taisirul"],
+  viewMode,
+  selectedBanglaTranslators,
   isPlaying,
   isLoading,
   verseTiming,
   verseWords,
   currentTimeMs = 0,
   onPlay,
-}: AyahCardProps & { selectedBanglaTranslators: string[] }) {
+}: AyahCardProps) {
   const { isBookmarked, toggleBookmark } = useBookmarks();
   const bookmarked = isBookmarked(surahId, verse.id);
   const fontClass = (() => {
@@ -58,77 +61,42 @@ export default function AyahCard({
 
   return (
     <div
-      className={`group relative rounded-xl transition-all duration-300 mb-4 shadow-[0_2px_8px_rgba(0,0,0,0.02)] hover:shadow-[0_8px_20px_rgba(60,47,47,0.05)] ${
+      className={`group relative rounded-xl transition-all duration-300 mb-6 flex overflow-hidden ${
         isPlaying
-          ? "bg-gold/10 ring-1 ring-gold/30"
-          : "bg-card hover:bg-tertiary/30"
+          ? "bg-green/5 ring-1 ring-green/20"
+          : "bg-card hover:bg-tertiary/20"
       }`}
     >
-      {/* Playing indicator bar */}
-      {isPlaying && (
-        <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-gold rounded-l-xl" />
-      )}
+      {/* Left Action Column */}
+      <div className="w-14 flex flex-col items-center py-5 border-r border-white/5 bg-black/10">
+        <span className="text-[10px] font-bold text-muted mb-4">{surahId}:{verse.id}</span>
+        
+        <button
+          onClick={onPlay}
+          className={`p-2 rounded-lg transition-all mb-2 ${
+            isPlaying ? "text-green bg-green/10" : "text-muted hover:text-green hover:bg-tertiary"
+          }`}
+        >
+          {isLoading ? <Loader2 size={16} className="animate-spin" /> : isPlaying ? <Square size={16} fill="currentColor" /> : <Play size={16} fill="currentColor" />}
+        </button>
 
-      <div className="px-5 py-5">
-        {/* Top row: verse number + actions */}
-        <div className="flex items-center justify-between mb-4">
-          {/* Verse number */}
-          <div className="flex items-center gap-2">
-            <div
-              className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold shadow-sm ${
-                isPlaying
-                  ? "bg-gold text-card"
-                  : "bg-tertiary text-secondary"
-              }`}
-            >
-              {verse.id}
-            </div>
-          </div>
+        <button
+          onClick={() => toggleBookmark({
+            surahId, surahName, surahTranslation,
+            verseId: verse.id, arabic: verse.text,
+            translation: verse.translation, bangla: verse.bangla,
+            banglaTranslations: verse.banglaTranslations as any
+          })}
+          className={`p-2 rounded-lg transition-all mb-2 ${
+            bookmarked ? "text-green bg-green/10" : "text-muted hover:text-green hover:bg-tertiary"
+          }`}
+        >
+          <BookMarked size={16} fill={bookmarked ? "currentColor" : "none"} />
+        </button>
+      </div>
 
-          {/* Action buttons */}
-          <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-            <button
-              onClick={() =>
-                toggleBookmark({
-                  surahId,
-                  surahName,
-                  surahTranslation,
-                  verseId: verse.id,
-                  arabic: verse.text,
-                  translation: verse.translation,
-                  bangla: verse.bangla,
-                  banglaTranslations: verse.banglaTranslations as any,
-                })
-              }
-              className={`p-1.5 rounded-lg transition-all ${
-                bookmarked
-                  ? "text-gold bg-[rgba(212,168,67,0.15)]"
-                  : "text-muted hover:text-gold hover:bg-tertiary"
-              }`}
-              title={bookmarked ? "Remove bookmark" : "Bookmark"}
-            >
-              <BookMarked size={15} fill={bookmarked ? "currentColor" : "none"} />
-            </button>
-            <button
-              onClick={onPlay}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                isPlaying
-                  ? "bg-gold text-[#0d1117]"
-                  : "bg-tertiary text-secondary hover:text-primary hover:bg-hover"
-              }`}
-              title={isPlaying ? "Stop" : "Play"}
-            >
-              {isLoading ? (
-                <Loader2 size={13} className="animate-spin" />
-              ) : isPlaying ? (
-                <Square size={13} fill="currentColor" />
-              ) : (
-                <Play size={13} fill="currentColor" />
-              )}
-              {isPlaying ? "Stop" : "Play"}
-            </button>
-          </div>
-        </div>
+      <div className="flex-1 px-6 py-6">
+
 
         <div
           className={`arabic-text ${fontClass} text-primary mb-5 leading-[2.4] flex flex-wrap justify-start gap-x-2 gap-y-3`}
@@ -141,8 +109,8 @@ export default function AyahCard({
                 return (
                   <span
                     key={word.id}
-                    className="inline-flex items-center justify-center mx-1 text-gold"
-                    style={{ fontFamily: "'Amiri', serif", fontSize: `${arabicSize * 0.6}px` }}
+                    className="inline-flex items-center justify-center mx-2 text-green"
+                    style={{ fontFamily: "'Amiri', serif", fontSize: `${arabicSize * 0.7}px` }}
                   >
                     ﴿{verse.id}﴾
                   </span>
@@ -157,9 +125,9 @@ export default function AyahCard({
                 <span
                   key={word.id}
                   className={`transition-all duration-200 ${
-                    isWordActive ? "text-gold" : ""
+                    isWordActive ? "text-green" : ""
                   }`}
-                  style={isWordActive ? { textShadow: "0 0 15px rgba(212,168,67,0.3)" } : {}}
+                  style={isWordActive ? { textShadow: "0 0 15px rgba(46,125,50,0.3)" } : {}}
                 >
                   {word.text_uthmani}
                 </span>
@@ -169,8 +137,8 @@ export default function AyahCard({
             <>
               {verse.text}
               <span
-                className="inline-flex items-center justify-center mx-2 text-gold"
-                style={{ fontFamily: "'Amiri', serif", fontSize: `${arabicSize * 0.6}px` }}
+                className="inline-flex items-center justify-center mx-3 text-green"
+                style={{ fontFamily: "'Amiri', serif", fontSize: `${arabicSize * 0.7}px` }}
               >
                 ﴿{verse.id}﴾
               </span>
@@ -179,54 +147,68 @@ export default function AyahCard({
         </div>
 
         {/* Divider */}
-        <div className="h-px bg-active/20 mb-4" />
-
-        {/* Translations */}
-        {(translationLanguage === "english" || translationLanguage === "both") && (
-          <div className="mb-4">
-            <p className="text-[10px] text-muted mb-1.5 font-bold uppercase tracking-wider">English (Abdul Haleem)</p>
-            <p
-              className="text-primary/80 leading-relaxed"
-              style={{ fontSize: `${translationSize}px` }}
-            >
-              {verse.translation}
-            </p>
-          </div>
+        {viewMode === "translation" && (
+          <div className="h-px bg-active/20 mb-4" />
         )}
 
-        {(translationLanguage === "bangla" || translationLanguage === "both") && (
+        {/* Translations Section */}
+        {viewMode === "translation" && (
           <div className="space-y-4">
-            {verse.banglaTranslations && verse.banglaTranslations.length > 0 ? (
-              verse.banglaTranslations
-                .filter(t => selectedBanglaTranslators.includes(t.id))
-                .map((t, idx) => (
-                  <div key={t.id} className={`${idx > 0 ? "pt-4 border-t border-active/50" : ""}`}>
-                    <p className="text-[10px] text-gold mb-1.5 font-bold uppercase tracking-wider flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-gold/40" />
-                      {t.name}
+            {(translationLanguage === "english" || translationLanguage === "both") && (
+              <div className="p-4 rounded-xl bg-black/5 dark:bg-black/20 border border-black/5 dark:border-white/5 transition-all hover:border-green/20 group/eng">
+                <p className="text-[10px] text-muted mb-2 font-bold uppercase tracking-widest flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-green/40 group-hover/eng:bg-green" />
+                  English (Abdul Haleem)
+                </p>
+                <p
+                  className="text-primary/90 leading-relaxed"
+                  style={{ fontSize: `${translationSize}px` }}
+                >
+                  {verse.translation}
+                </p>
+              </div>
+            )}
+
+            {(translationLanguage === "bangla" || translationLanguage === "both") && (
+              <div className="space-y-4">
+                {verse.banglaTranslations && verse.banglaTranslations.length > 0 ? (
+                  verse.banglaTranslations
+                    .filter(t => selectedBanglaTranslators.includes(t.id))
+                    .map((t) => (
+                      <div key={t.id} className="p-4 rounded-xl bg-black/5 dark:bg-black/20 border border-black/5 dark:border-white/5 transition-all hover:border-green/20 group/bn">
+                        <p className="text-[10px] text-green/60 mb-2 font-bold uppercase tracking-widest flex items-center gap-2">
+                          <span className="w-1.5 h-1.5 rounded-full bg-green/40 group-hover/bn:bg-green" />
+                          {t.name}
+                        </p>
+                        <p
+                          className="text-secondary leading-relaxed"
+                          style={{ fontSize: `${translationSize}px`, lineHeight: "1.8", fontFamily: "'Noto Sans Bengali', sans-serif" }}
+                        >
+                          {t.text}
+                        </p>
+                      </div>
+                    ))
+                ) : verse.bangla ? (
+                  <div className="p-4 rounded-xl bg-black/5 dark:bg-black/20 border border-black/5 dark:border-white/5 transition-all hover:border-green/20 group/bn">
+                    <p className="text-[10px] text-green/60 mb-2 font-bold uppercase tracking-widest flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-green/40 group-hover/bn:bg-green" />
+                      Mujibur Rahman
                     </p>
                     <p
                       className="text-secondary leading-relaxed"
                       style={{ fontSize: `${translationSize}px`, lineHeight: "1.8", fontFamily: "'Noto Sans Bengali', sans-serif" }}
                     >
-                      {t.text}
+                      {verse.bangla}
                     </p>
                   </div>
-                ))
-            ) : verse.bangla ? (
-              <div>
-                <p className="text-[10px] text-gold mb-1.5 font-bold uppercase tracking-wider">Bengali</p>
-                <p
-                  className="text-secondary leading-relaxed"
-                  style={{ fontSize: `${translationSize}px`, lineHeight: "1.8", fontFamily: "'Noto Sans Bengali', sans-serif" }}
-                >
-                  {verse.bangla}
-                </p>
+                ) : (
+                  <div className="p-4 rounded-xl bg-black/5 dark:bg-black/20 border border-black/5 dark:border-white/5">
+                    <p className="text-muted italic text-xs">
+                      বাংলা অনুবাদ লোড হচ্ছে...
+                    </p>
+                  </div>
+                )}
               </div>
-            ) : (
-              <p className="text-muted italic text-xs">
-                বাংলা অনুবাদ লোড হচ্ছে...
-              </p>
             )}
           </div>
         )}

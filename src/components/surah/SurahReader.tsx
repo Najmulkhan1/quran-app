@@ -133,6 +133,7 @@ export default function SurahReader({ surah }: SurahReaderProps) {
                 translationSize={settings.translationSize}
                 translationLanguage={settings.translationLanguage}
                 selectedBanglaTranslators={settings.selectedBanglaTranslators}
+                viewMode={settings.viewMode}
                 isPlaying={isActive}
                 isLoading={isAudioLoading}
                 verseTiming={verseTiming}
